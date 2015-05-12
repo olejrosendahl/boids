@@ -1,5 +1,19 @@
-var camera, scene, renderer, fish, fishes, boid, boids;
+var Fish = function() {
+  THREE.PlaneGeometry.call(this, 30, 15, 2, 1);
+}
+Fish.prototype = new THREE.PlaneGeometry();
+Fish.prototype.constructor = Fish;
 
+var FishMesh = function() {
+  THREE.Mesh.call(this, new Fish(), new THREE.MeshBasicMaterial({color: 0xffffff}));
+
+  this.phase = Math.floor( Math.random() * 62.83 );
+}
+
+FishMesh.prototype = new THREE.Mesh();
+FishMesh.prototype.constructor = FishMesh;
+
+var camera, scene, renderer, fish, fishes, boid, boids;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 
 init();
@@ -11,7 +25,7 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = 400;
+  camera.position.z = 200;
 
   scene = new THREE.Scene();
 
@@ -30,17 +44,25 @@ function init() {
     boid.velocity.y = Math.random() * 2 - 1;
     boid.velocity.z = Math.random() * 2 - 1;
 
-    fish = fishes[i] = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff}));
+    fish = fishes[i] = new FishMesh();
     scene.add(fish);
   }
+
+  window.addEventListener('resize', function(e) {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 }
+
 
 function animate() {
   requestAnimationFrame(animate);
   render();
 }
-
 function render() {
+
   for (var i = 0, il = fishes.length; i < il; i++) {
     boid = boids[ i ];
     boid.flock( boids );
@@ -53,6 +75,11 @@ function render() {
 
     fish.rotation.y = Math.atan2(- boid.velocity.z, boid.velocity.x);
     fish.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
+
+    fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
+
+    fish.geometry.vertices[3].z = Math.sin(fish.phase) * 2;
+    fish.geometry.vertices[0].z = Math.sin(fish.phase) * 2;
   }
 
   renderer.render(scene, camera);
