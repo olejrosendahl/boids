@@ -1,5 +1,8 @@
 var FishMesh = function() {
-  THREE.Mesh.call(this, new Fish(), new THREE.MeshBasicMaterial({color: 0xffffff}));
+  THREE.Mesh.call(this, new Fish(), new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    side: THREE.DoubleSide
+  }));
 
   this.phase = Math.floor( Math.random() * 62.83 );
 }
