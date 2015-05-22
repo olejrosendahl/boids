@@ -5,10 +5,10 @@ var Boid = function() {
   this.velocity = new THREE.Vector3();
   _acceleration = new THREE.Vector3();
 
-  var _width = 500,
-    _height = 500,
+  var _width = 400,
+    _height = 400,
     _depth = 200,
-    _neighborhoodRadius = 100;
+    _neighborhoodRadius = 60;
 
   this.separation = function ( boids ) {
     var boid, distance,
