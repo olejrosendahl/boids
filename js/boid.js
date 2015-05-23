@@ -8,7 +8,9 @@ var Boid = function() {
   var _width = 400,
     _height = 400,
     _depth = 200,
-    _neighborhoodRadius = 60;
+    _neighborhoodRadius = 60,
+    _maxSpeed = 4,
+    _maxSteerForce = 0.1;
 
   this.separation = function ( boids ) {
     var boid, distance,
