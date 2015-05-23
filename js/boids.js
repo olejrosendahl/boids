@@ -1,4 +1,4 @@
-var camera, scene, renderer, fish, fishes, boid, boids;
+var camera, scene, renderer, fish, fishes, boid, boids,dae;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 
 init();
@@ -17,6 +17,7 @@ function init() {
   camera.rotation.x =-90;
   //camera.rotation.z =-90;
 
+  //renderer.setClearColorHex( 0xff0000, 1 );
   scene = new THREE.Scene();
 
   fishes = [];
@@ -44,6 +45,69 @@ function init() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
+
+  //mesh
+
+//   // instantiate a loader
+// var loader = new THREE.JSONLoader();
+
+// // load a resource
+// loader.load(
+//   // resource URL
+//   'js/ground.json',
+//   // Function when resource is loaded
+//   function ( geometry, materials ) {
+//     var material = new THREE.MeshFaceMaterial( materials );
+//     var object = new THREE.Mesh( geometry, material );
+//     scene.add( object );
+//   }
+// );
+
+// var loader = new THREE.ColladaLoader();
+//       loader.options.convertUpAxis = true;
+//       loader.load( 'js/ground.dae', function ( collada ) {
+
+//         dae = collada.scene;
+
+//          dae.traverse( function ( child ) {
+
+//            if ( child instanceof THREE.SkinnedMesh ) {
+
+//              var animation = new THREE.Animation( child, child.geometry.animation );
+//              animation.play();
+
+//            }
+
+//           } 
+//         );
+
+//         dae.scale.x = dae.scale.y = dae.scale.z = 2;
+//         dae.updateMatrix();
+
+//         //init();
+//        // animate();
+
+//       } );
+//       scene.add( dae );
+
+// instantiate a loader
+var loader = new THREE.ColladaLoader();
+
+loader.load(
+  // resource URL
+  'js/ground.dae',
+  // Function when resource is loaded
+  function ( collada ) {
+    scene.add( collada.scene );
+  },
+  // Function called when download progresses
+  function ( xhr ) {
+    console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+  }
+);
+
+
+
 }
 
 

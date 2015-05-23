@@ -6,9 +6,17 @@ var Boid = function() {
   _acceleration = new THREE.Vector3();
 
   var _width = 400,
+//<<<<<<< HEAD
     _height = 100, //limited the Y axis of movement // some fishes are going out of the box but its doesnt really matters
     _depth = 400, //made it square
     _neighborhoodRadius = 60;
+// =======
+//     _height = 400,
+//     _depth = 200,
+//     _neighborhoodRadius = 60,
+//     _maxSpeed = 4,
+//     _maxSteerForce = 0.1;
+// >>>>>>> master
 
   this.separation = function ( boids ) {
     var boid, distance,
