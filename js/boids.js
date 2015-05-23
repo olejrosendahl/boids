@@ -24,11 +24,11 @@ function init() {
 
   var geometry = new THREE.PlaneGeometry(50, 15, 2, 1);
 
-  for (var i = 0; i < 200; i++) {
+  for (var i = 0; i < 100; i++) { //100 fishes will be good for now
     boid = boids[i] = new Boid();
 
     boid.position.x = Math.random() * 400 - 200;
-    boid.position.y = Math.random() * 400 - 200;
+    boid.position.y = Math.random() * 100 - 100; // fishes are now all in the aquarium
     boid.position.z = Math.random() * 400 - 200;
     boid.velocity.x = Math.random() * 2 - 1;
     boid.velocity.y = Math.random() * 2 - 1;
