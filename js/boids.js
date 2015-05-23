@@ -15,6 +15,7 @@ function init() {
   //var camera = new THREE.OrthographicCamera( window.innerWidth  / - 2, window.innerWidth  / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
   camera.position.y = 400;
   camera.rotation.x =-90;
+  //camera.rotation.z =-90;
 
   scene = new THREE.Scene();
 
@@ -59,7 +60,7 @@ function render() {
     fish.position.copy( boids[ i ].position );
 
     color = fish.material.color;
-    color.r = color.g = color.b = ( 500 - fish.position.z ) / 1000;
+    color.r = color.g = color.b = ( 500 + fish.position.y ) / 1000; //fog it is probably, made it work with depth
 
     fish.rotation.y = Math.atan2(- boid.velocity.z, boid.velocity.x);
     fish.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;

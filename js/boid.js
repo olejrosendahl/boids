@@ -7,7 +7,7 @@ var Boid = function() {
 
   var _width = 400,
     _height = 100, //limited the Y axis of movement // some fishes are going out of the box but its doesnt really matters
-    _depth = 200,
+    _depth = 400, //made it square
     _neighborhoodRadius = 60;
 
   this.separation = function ( boids ) {
