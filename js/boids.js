@@ -1,4 +1,4 @@
-var camera, scene, renderer, fish, fishes, boid, boids,dae;
+var camera, scene, renderer, fish, fishes, boid, boids;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 
 init();
@@ -105,7 +105,6 @@ loader.load(
     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
   }
 );
-
 
 
 }
