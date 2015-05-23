@@ -10,7 +10,11 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = 200;
+  
+  // ortho cam might be a better idea
+  //var camera = new THREE.OrthographicCamera( window.innerWidth  / - 2, window.innerWidth  / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
+  camera.position.y = 400;
+  camera.rotation.x =-90;
 
   scene = new THREE.Scene();
 

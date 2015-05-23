@@ -6,7 +6,7 @@ var Boid = function() {
   _acceleration = new THREE.Vector3();
 
   var _width = 400,
-    _height = 400,
+    _height = 100, //limited the Y axis of movement // some fishes are going out of the box but its doesnt really matters
     _depth = 200,
     _neighborhoodRadius = 60;
 
