@@ -1,4 +1,4 @@
-var camera, scene, renderer, fish, fishes, boid, boids;
+var camera, scene, renderer, fish, fishes, boid, boids,ground;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 
 init();
@@ -6,6 +6,7 @@ animate();
 
 function init() {
   renderer = new THREE.WebGLRenderer();
+  renderer.setClearColor(0x331188, 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
@@ -14,6 +15,7 @@ function init() {
   // ortho cam might be a better idea
   //var camera = new THREE.OrthographicCamera( window.innerWidth  / - 2, window.innerWidth  / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
   camera.position.y = 400;
+  camera.position.z = -400;
   camera.rotation.x =-90;
   //camera.rotation.z =-90;
 
@@ -95,17 +97,20 @@ var loader = new THREE.ColladaLoader();
 
 loader.load(
   // resource URL
-  'js/ground.dae',
+  'assets/ground.dae',
   // Function when resource is loaded
-  function ( collada ) {
-    scene.add( collada.scene );
+  function ( collada ) { ground = collada.scene;
+    ground.position.y -= 200;
+    ground.scale.x = ground.scale.z = ground.scale.y = 50;
+    ground.rotation.x =180;
+    scene.add( ground);
   },
   // Function called when download progresses
   function ( xhr ) {
     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
   }
 );
-
+//
 
 }
 
