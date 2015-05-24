@@ -5,7 +5,10 @@ init();
 animate();
 
 function init() {
-  renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer({antialias:true} );
+  scene = new THREE.Scene();
+
+
   renderer.setClearColor(0x331188, 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -15,17 +18,20 @@ function init() {
   // ortho cam might be a better idea
   //var camera = new THREE.OrthographicCamera( window.innerWidth  / - 2, window.innerWidth  / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
   camera.position.y = 400;
-  camera.position.z = -400;
+  camera.position.z = -300;
   camera.rotation.x =-90;
-  //camera.rotation.z =-90;
 
-  //renderer.setClearColorHex( 0xff0000, 1 );
-  scene = new THREE.Scene();
+  var ambientLight = new THREE.AmbientLight( 0x113344 ); // soft white light
+  scene.add( ambientLight );
+
+  var light = new THREE.PointLight( 0xff0000, 1, 1000000 );
+  light.position.set( 50, 50, 50 );
+  scene.add( light );
 
   fishes = [];
   boids = [];
 
-  var geometry = new THREE.PlaneGeometry(50, 15, 2, 1);
+ // var geometry = new THREE.PlaneGeometry(50, 15, 2, 1); 
 
   for (var i = 0; i < 100; i++) { //100 fishes will be good for now
     boid = boids[i] = new Boid();
@@ -50,54 +56,10 @@ function init() {
 
   //mesh
 
-//   // instantiate a loader
-// var loader = new THREE.JSONLoader();
-
-// // load a resource
-// loader.load(
-//   // resource URL
-//   'js/ground.json',
-//   // Function when resource is loaded
-//   function ( geometry, materials ) {
-//     var material = new THREE.MeshFaceMaterial( materials );
-//     var object = new THREE.Mesh( geometry, material );
-//     scene.add( object );
-//   }
-// );
-
-// var loader = new THREE.ColladaLoader();
-//       loader.options.convertUpAxis = true;
-//       loader.load( 'js/ground.dae', function ( collada ) {
-
-//         dae = collada.scene;
-
-//          dae.traverse( function ( child ) {
-
-//            if ( child instanceof THREE.SkinnedMesh ) {
-
-//              var animation = new THREE.Animation( child, child.geometry.animation );
-//              animation.play();
-
-//            }
-
-//           } 
-//         );
-
-//         dae.scale.x = dae.scale.y = dae.scale.z = 2;
-//         dae.updateMatrix();
-
-//         //init();
-//        // animate();
-
-//       } );
-//       scene.add( dae );
-
-// instantiate a loader
 var loader = new THREE.ColladaLoader();
 
 loader.load(
-  // resource URL
-  'assets/ground.dae',
+  'assets/test.dae',
   // Function when resource is loaded
   function ( collada ) { ground = collada.scene;
     ground.position.y -= 200;
@@ -110,7 +72,6 @@ loader.load(
     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
   }
 );
-//
 
 }
 
