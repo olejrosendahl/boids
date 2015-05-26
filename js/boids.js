@@ -1,4 +1,4 @@
-var camera, scene, renderer, fish, fishes, boid, boids,ground;
+var camera, scene, renderer, fish, fishes, boid, boids,ground,FishMesh;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 
 init();
@@ -19,14 +19,18 @@ function init() {
   //var camera = new THREE.OrthographicCamera( window.innerWidth  / - 2, window.innerWidth  / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
   camera.position.y = 400;
   camera.position.z = -300;
-  camera.rotation.x =-90;
+  camera.rotation.x =-9;
 
   var ambientLight = new THREE.AmbientLight( 0x113344 ); // soft white light
   scene.add( ambientLight );
 
-  var light = new THREE.PointLight( 0xff0000, 1, 1000000 );
+  var light = new THREE.PointLight( 0xcc44ff, 1, 1000 );
   light.position.set( 50, 50, 50 );
   scene.add( light );
+
+  var light2 = new THREE.PointLight( 0xcc4499, 1, 1000 );
+  light2.position.set( -500, 500, 50 );
+  scene.add( light2 );
 
   fishes = [];
   boids = [];
@@ -56,22 +60,54 @@ function init() {
 
   //mesh
 
-var loader = new THREE.ColladaLoader();
+// var loader = new THREE.ColladaLoader();
 
-loader.load(
-  'assets/test.dae',
-  // Function when resource is loaded
-  function ( collada ) { ground = collada.scene;
-    ground.position.y -= 200;
-    ground.scale.x = ground.scale.z = ground.scale.y = 50;
-    ground.rotation.x =180;
-    scene.add( ground);
-  },
-  // Function called when download progresses
-  function ( xhr ) {
-    console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-  }
-);
+// loader.load(
+//   'assets/test.dae',
+//   // Function when resource is loaded
+//   function ( collada ) { ground = collada.scene;
+//     ground.position.y -= 200;
+//     ground.scale.x = ground.scale.z = ground.scale.y = 57;
+//     ground.rotation.x =180;
+//     scene.add( ground);
+//   },
+//   // Function called when download progresses
+//   function ( xhr ) {
+//     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+//   }
+// );
+
+  ///////////
+  // FLOOR //
+  ///////////
+  
+  // note: 4x4 checkboard pattern scaled so that each square is 25 by 25 pixels.
+  var floorTexture = new THREE.ImageUtils.loadTexture( 'assets/ground.jpg' );
+  floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+
+  var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+  var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
+  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+ 
+  floor.rotation.x = Math.PI / 8;
+  scene.add(floor);
+
+var loaderFish = new THREE.ColladaLoader();
+
+// loaderFish.load(
+//   'assets/Fish.dae',
+//   // Function when resource is loaded
+//   function ( collada ) { FishMesh = collada.scene;
+//     //FishMesh.position.y -= 200;
+//     FishMesh.scale.x = FishMesh.scale.z = FishMesh.scale.y = 570;
+//     //FishMesh.rotation.x =180;
+//     scene.add( FishMesh);
+//   },
+//   // Function called when download progresses
+//   function ( xhr ) {
+//     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+//   }
+// );
 
 }
 
