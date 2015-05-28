@@ -39,6 +39,22 @@ function init() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
+
+  window.addEventListener('mousemove', function(e) {
+    var boid, target = new THREE.Vector3(
+      event.clientX - window.innerWidth / 2,
+      -event.clientY + window.innerHeight / 2,
+      0
+    );
+
+    target.unproject(camera);
+
+    for (var i = 0; i < boids.length; i++) {
+      boid = boids[i];
+      target.z = boid.position.z;
+      boid.follow(target);
+    }
+  });
 }
 
 
@@ -46,6 +62,7 @@ function animate() {
   requestAnimationFrame(animate);
   render();
 }
+
 function render() {
   for (var i = 0, il = fishes.length; i < il; i++) {
     boid = boids[ i ];
