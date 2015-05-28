@@ -13,10 +13,14 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  
-  // ortho cam might be a better idea
-  //var camera = new THREE.OrthographicCamera( window.innerWidth  / - 2, window.innerWidth  / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
+  camera = new THREE.OrthographicCamera(
+    window.innerWidth  / - 2,
+    window.innerWidth  / 2,
+    window.innerHeight / 2,
+    window.innerHeight / - 2,
+    1,
+    1000
+  );
   camera.position.y = 400;
   camera.position.z = -300;
   camera.rotation.x =-9;
@@ -35,13 +39,11 @@ function init() {
   fishes = [];
   boids = [];
 
- // var geometry = new THREE.PlaneGeometry(50, 15, 2, 1); 
-
-  for (var i = 0; i < 100; i++) { //100 fishes will be good for now
+  for (var i = 0; i < 100; i++) {
     boid = boids[i] = new Boid();
 
     boid.position.x = Math.random() * 400 - 200;
-    boid.position.y = Math.random() * 100 - 100; // fishes are now all in the aquarium
+    boid.position.y = Math.random() * 100 - 100;
     boid.position.z = Math.random() * 400 - 200;
     boid.velocity.x = Math.random() * 2 - 1;
     boid.velocity.y = Math.random() * 2 - 1;
@@ -51,6 +53,16 @@ function init() {
     scene.add(fish);
   }
 
+  var floorTexture = new THREE.ImageUtils.loadTexture( 'assets/ground.jpg' );
+  floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+
+  var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+  var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
+  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+
+  floor.rotation.x = Math.PI / 8;
+  scene.add(floor);
+
   window.addEventListener('resize', function(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -58,64 +70,28 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  //mesh
+  window.addEventListener('mousemove', function(e) {
+    var boid, target = new THREE.Vector3(
+      event.clientX - window.innerWidth / 2,
+      -event.clientY + window.innerHeight / 2,
+      0
+    );
 
-// var loader = new THREE.ColladaLoader();
+    target.unproject(camera);
 
-// loader.load(
-//   'assets/test.dae',
-//   // Function when resource is loaded
-//   function ( collada ) { ground = collada.scene;
-//     ground.position.y -= 200;
-//     ground.scale.x = ground.scale.z = ground.scale.y = 57;
-//     ground.rotation.x =180;
-//     scene.add( ground);
-//   },
-//   // Function called when download progresses
-//   function ( xhr ) {
-//     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-//   }
-// );
-
-  ///////////
-  // FLOOR //
-  ///////////
-  
-  // note: 4x4 checkboard pattern scaled so that each square is 25 by 25 pixels.
-  var floorTexture = new THREE.ImageUtils.loadTexture( 'assets/ground.jpg' );
-  floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
-
-  var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
-  var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
-  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
- 
-  floor.rotation.x = Math.PI / 8;
-  scene.add(floor);
-
-var loaderFish = new THREE.ColladaLoader();
-
-// loaderFish.load(
-//   'assets/Fish.dae',
-//   // Function when resource is loaded
-//   function ( collada ) { FishMesh = collada.scene;
-//     //FishMesh.position.y -= 200;
-//     FishMesh.scale.x = FishMesh.scale.z = FishMesh.scale.y = 570;
-//     //FishMesh.rotation.x =180;
-//     scene.add( FishMesh);
-//   },
-//   // Function called when download progresses
-//   function ( xhr ) {
-//     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-//   }
-// );
-
+    for (var i = 0; i < boids.length; i++) {
+      boid = boids[i];
+      target.z = boid.position.z;
+      boid.follow(target);
+    }
+  });
 }
-
 
 function animate() {
   requestAnimationFrame(animate);
   render();
 }
+
 function render() {
   for (var i = 0, il = fishes.length; i < il; i++) {
     boid = boids[ i ];
@@ -125,7 +101,7 @@ function render() {
     fish.position.copy( boids[ i ].position );
 
     color = fish.material.color;
-    color.r = color.g = color.b = ( 500 + fish.position.y ) / 1000; //fog it is probably, made it work with depth
+    color.r = color.g = color.b = ( 500 + fish.position.y ) / 1000;
 
     fish.rotation.y = Math.atan2(- boid.velocity.z, boid.velocity.x);
     fish.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
