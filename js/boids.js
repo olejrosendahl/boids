@@ -1,33 +1,6 @@
 var camera, scene, renderer, fish, fishes, boid, boids;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
-
-var dae;
-
-  var loader = new THREE.ColladaLoader();
-      loader.options.convertUpAxis = true;
-      loader.load( 'assets/fish.dae', function ( collada ) {
-
-        dae = collada.scene;
-
-        dae.traverse( function ( child ) {
-
-          if ( child instanceof THREE.SkinnedMesh ) {
-
-            var animation = new THREE.Animation( child, child.geometry.animation );
-            animation.play();
-          }
-        } );
-
-        dae.scale.x = dae.scale.y = dae.scale.z = 30;
-        //dae.rotation.z += 90;
-        dae.updateMatrix();
-
-
-init();
-animate();
-
-
-} );
+var clock = new THREE.Clock();
 
 function init() {
   renderer = new THREE.WebGLRenderer();
@@ -36,19 +9,14 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = 400;
-
-
-
+  camera.position.z = 1000;
 
   scene = new THREE.Scene();
-   renderer.setClearColor(0x331188, 1);
+  renderer.setClearColor(0x331188, 1);
   fishes = [];
   boids = [];
 
-
-
-   var ambientLight = new THREE.AmbientLight( 0x113344 ); // soft white light
+  var ambientLight = new THREE.AmbientLight( 0x113344 );
   scene.add( ambientLight );
 
   var light = new THREE.PointLight( 0xcc44ff, 1, 1000 );
@@ -70,11 +38,16 @@ function init() {
     boid.velocity.x = Math.random() * 2 - 1;
     boid.velocity.y = Math.random() * 2 - 1;
     boid.velocity.z = Math.random() * 2 - 1;
-
-    fish = fishes[i] = new FishMesh();
-    scene.add(fish);
-    scene.add( dae );
   }
+
+  var loader = new THREE.JSONLoader();
+  loader.load("assets/fish.json", function(geometry, materials) {
+    for (var i = 0; i < 200; i++) {
+      fish = fishes[i] = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+      fish.scale.set(0.3, 0.3, 0.3);
+      scene.add(fish);
+    }
+  });
 
   window.addEventListener('resize', function(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -100,13 +73,10 @@ function init() {
   });
 }
 
-
 function animate() {
   requestAnimationFrame(animate);
   render();
 }
-
-var clock = new THREE.Clock();
 
 function render() {
   for (var i = 0, il = fishes.length; i < il; i++) {
@@ -116,28 +86,16 @@ function render() {
     fish = fishes[ i ];
     fish.position.copy( boids[ i ].position );
 
-
-    color = fish.material.color;
-    color.r = color.g = color.b = ( 500 - fish.position.z ) / 1000;
-
     fish.rotation.y = Math.atan2(- boid.velocity.z, boid.velocity.x);
     fish.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
 
     fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
-
-    fish.geometry.vertices[3].z = Math.sin(fish.phase) * 2;
-    fish.geometry.vertices[0].z = Math.sin(fish.phase) * 2;
   }
-  dae.position.copy(boid.position);
 
-  dae.rotation.y = Math.atan2(- boid.velocity.z, boid.velocity.x) + 90 * Math.PI/2;
-  dae.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
-  //dae.rotation.x = 45 *Math.PI/2;
- 
-  
-  //dae.rotation.y = 90 * Math.PI/2;
-var timer = Date.now() * 0.0005;
-THREE.AnimationHandler.update( clock.getDelta() );
+  THREE.AnimationHandler.update( clock.getDelta() );
 
   renderer.render(scene, camera);
 }
+
+init();
+animate();
