@@ -9,7 +9,7 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = 1000;
+  camera.position.z = 300;
 
   scene = new THREE.Scene();
   renderer.setClearColor(0x331188, 1);
@@ -29,7 +29,7 @@ function init() {
 
   var geometry = new THREE.PlaneGeometry(50, 15, 2, 1);
 
-  for (var i = 0; i < 200; i++) {
+  for (var i = 0; i < 100; i++) {
     boid = boids[i] = new Boid();
 
     boid.position.x = Math.random() * 400 - 200;
@@ -40,13 +40,17 @@ function init() {
     boid.velocity.z = Math.random() * 2 - 1;
   }
 
-  var loader = new THREE.JSONLoader();
-  loader.load("assets/monster.json", function(geometry, materials) {
-    for (var i = 0; i < 200; i++) {
-      fish = fishes[i] = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-      fish.scale.set(0.3, 0.3, 0.3);
-      scene.add(fish);
-    }
+  var loader = new THREE.ObjectLoader();
+  loader.load("assets/fish.json", function(object) {
+    object.traverse(function(child) {
+      if (child instanceof THREE.Mesh) {
+        for (var i = 0; i < 100; i++) {
+          child.scale.set(5,5,5);
+          fish = fishes[i] = child.clone();
+          scene.add(fish);
+        }
+      }
+    });
   });
 
   window.addEventListener('resize', function(e) {
@@ -67,7 +71,7 @@ function init() {
 
     for (var i = 0; i < boids.length; i++) {
       boid = boids[i];
-      target.z = boid.position.z;
+      target.z = 0;
       boid.follow(target);
     }
   });
