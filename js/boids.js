@@ -41,7 +41,7 @@ function init() {
   }
 
   var loader = new THREE.JSONLoader();
-  loader.load("assets/fish.json", function(geometry, materials) {
+  loader.load("assets/monster.json", function(geometry, materials) {
     for (var i = 0; i < 200; i++) {
       fish = fishes[i] = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
       fish.scale.set(0.3, 0.3, 0.3);
