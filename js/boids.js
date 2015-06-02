@@ -75,8 +75,9 @@ function init() {
   loader.load("assets/fish.json", function(object) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
+        child.scale.set(5,5,5);
+
         for (var i = 0; i < 100; i++) {
-          child.scale.set(5,5,5);
           fish = fishes[i] = child.clone();
           scene.add(fish);
         }
