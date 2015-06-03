@@ -69,13 +69,13 @@ function init() {
   var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
   floor.rotation.x = Math.PI / 8;
-  scene.add(floor);
+  //scene.add(floor);
 
   var loader = new THREE.ObjectLoader();
   loader.load("assets/fish.json", function(object) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
-        child.scale.set(5,5,5);
+        child.scale.set(20, 20, 20);
 
         for (var i = 0; i < 100; i++) {
           fish = fishes[i] = child.clone();
