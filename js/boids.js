@@ -10,6 +10,14 @@ stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
 
+function setupGUI() {
+  var gui = new dat.GUI();
+
+  gui.add(camera.position, 'x', -500, 500).step(10);
+  gui.add(camera.position, 'y', -500, 500).step(10);
+  gui.add(camera.position, 'z', -500, 500).step(10);
+}
+
 document.body.appendChild(stats.domElement);
 
 function init() {
@@ -30,7 +38,7 @@ function init() {
   );
   camera.position.y = 400;
   camera.position.z = -300;
-  camera.rotation.x =-9;
+  camera.rotation.x = -45 * Math.PI/180
 
   var ambientLight = new THREE.AmbientLight( 0x113344 ); // soft white light
   scene.add( ambientLight );
@@ -93,6 +101,8 @@ function init() {
       }
     });
   });
+
+  setupGUI();
 
   window.addEventListener('resize', function(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
