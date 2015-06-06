@@ -1,19 +1,28 @@
 var camera, scene, renderer, fish, fishes, boid, boids,ground,FishMesh;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 var clock = new THREE.Clock();
+var stats = new Stats();
+
+stats.setMode(1); // 0: fps, 1: ms
+
+// align top-left
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+
+document.body.appendChild(stats.domElement);
 
 function init() {
   renderer = new THREE.WebGLRenderer({antialias:true} );
   scene = new THREE.Scene();
-
 
   renderer.setClearColor(0x331188, 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
   camera = new THREE.OrthographicCamera(
-    window.innerWidth  / - 2,
     window.innerWidth  / 2,
+    window.innerWidth  / - 2,
     window.innerHeight / 2,
     window.innerHeight / - 2,
     1,
@@ -110,8 +119,10 @@ function init() {
 }
 
 function animate() {
-  requestAnimationFrame(animate);
+  stats.begin();
   render();
+  stats.end();
+  requestAnimationFrame(animate);
 }
 
 function render() {
