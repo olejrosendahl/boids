@@ -1,4 +1,6 @@
 var camera, scene, renderer, fish, fishes, boid, boids,FishMesh,bg;
+//parciles in the water
+var partilcesWater,geometryWater;
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 var clock = new THREE.Clock();
 
@@ -24,7 +26,7 @@ function init() {
 
   var light = new THREE.PointLight( 0xcc44ff, 1, 1000 );
   light.position.set( 50, 100, -50 );
-  scene.add( light );
+  scene.add( light ); 
 
   var light2 = new THREE.PointLight( 0xcc4499, 1, 1000 );
   light2.position.set( -500, 500, 50 );
@@ -104,6 +106,12 @@ function init() {
       boid.follow(target);
     }
   });
+
+  //partilces in the water
+  geometryWater = new THREE.Geometry();
+  partilcesWater1 = THREE.ImageUtils.loadTexture("assets/img/sprite1.png");
+  partilcesWater2 = THREE.ImageUtils.loadTexture("assets/img/sprite2.png");
+  partilcesWater3 = THREE.ImageUtils.loadTexture("assets/img/sprite3.png");
 }
 
 function animate() {
