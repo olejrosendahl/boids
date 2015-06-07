@@ -18,7 +18,7 @@ function init() {
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000000 );
 
   camera.position.z = 450;
-  camera.position.y = 100;
+  camera.position.y = 200;
  
   var ambientLight = new THREE.AmbientLight( 0x113344 ); 
   scene.add( ambientLight );
@@ -38,8 +38,8 @@ function init() {
     boid = boids[i] = new Boid();
 
     boid.position.x = Math.random() * 400 - 200;
-    boid.position.y = Math.random() * 100 - 100;
-    boid.position.z = Math.random() * 400 - 200;
+    boid.position.y = Math.random() * 800 - 100;
+    boid.position.z = Math.random() * 200 - 400;
     boid.velocity.x = Math.random() * 2 - 1;
     boid.velocity.y = Math.random() * 2 - 1;
     boid.velocity.z = Math.random() * 2 - 1;
@@ -47,11 +47,10 @@ function init() {
 
 
   var loader = new THREE.ObjectLoader();
-  loader.load("assets/fish.json", function(object) {
+  loader.load("assets/fish_c.json", function(object) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
         child.scale.set(10, 10, 10);
-        child.rotation.x = Math.PI /3;
 
         for (var i = 0; i < 50; i++) {
           fish = fishes[i] = child.clone();
@@ -60,6 +59,11 @@ function init() {
       }
     });
   });
+
+  var axisHelper = new THREE.AxisHelper(100);
+  axisHelper.position.y = 100;
+  axisHelper.position.x = -100;
+  scene.add(axisHelper);
 
  var loader2 = new THREE.ColladaLoader();
  loader2.load(
@@ -126,10 +130,10 @@ function render() {
     fish = fishes[ i ];
     fish.position.copy( boids[ i ].position );
 
-    fish.rotation.y = Math.atan2(- boid.velocity.z, boid.velocity.x);
-    fish.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
+    fish.rotation.z = Math.atan2(- boid.velocity.z, boid.velocity.x);
+    fish.rotation.y = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
 
-    fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
+   // fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
   }
 
   THREE.AnimationHandler.update( clock.getDelta() );
