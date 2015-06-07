@@ -101,8 +101,6 @@ function init() {
       0
     );
 
-    target.unproject(camera);
-
     for (var i = 0; i < boids.length; i++) {
       boid = boids[i];
       target.z = 0;
