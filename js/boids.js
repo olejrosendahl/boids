@@ -1,6 +1,5 @@
 var camera, scene, renderer, fish, fishes, boid, boids,FishMesh,bg;
-//parciles in the water
-var partilcesWater,geometryWater;
+
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 var clock = new THREE.Clock();
 
