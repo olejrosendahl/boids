@@ -2,18 +2,33 @@ var camera, scene, renderer, fish, fishes, boid, boids,FishMesh,bg;
 
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 var clock = new THREE.Clock();
+var stats = new Stats();
+
+stats.setMode(1); // 0: fps, 1: ms
+
+// align top-left
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+
+function setupGUI() {
+  var gui = new dat.GUI();
+
+  gui.add(camera.position, 'x', -500, 500).step(10);
+  gui.add(camera.position, 'y', -500, 500).step(10);
+  gui.add(camera.position, 'z', -500, 500).step(10);
+}
+
+document.body.appendChild(stats.domElement);
 
 function init() {
   renderer = new THREE.WebGLRenderer({antialias:true} );
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog( 0x331188,700,3000 );
 
-
   renderer.setClearColor(0x331188, 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-
-
 
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000000 );
 
@@ -87,6 +102,8 @@ function init() {
   }
 );
 
+  setupGUI();
+
   window.addEventListener('resize', function(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -116,8 +133,10 @@ function init() {
 }
 
 function animate() {
-  requestAnimationFrame(animate);
+  stats.begin();
   render();
+  stats.end();
+  requestAnimationFrame(animate);
 }
 
 function render() {
