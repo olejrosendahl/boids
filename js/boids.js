@@ -4,7 +4,7 @@ var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 var clock = new THREE.Clock();
 var stats = new Stats();
 
-stats.setMode(1); // 0: fps, 1: ms
+stats.setMode(0); // 0: fps, 1: ms
 
 // align top-left
 stats.domElement.style.position = 'absolute';
@@ -33,7 +33,7 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000000 );
+  camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000000 );
 
   camera.position.z = 450;
   camera.position.y = 200;
@@ -111,7 +111,7 @@ plane.castShadow = false;
  var loader2 = new THREE.ColladaLoader();
  loader2.load(
   // resource URL
-  'assets/bg.dae',
+  'assets/bg2.dae',
   // Function when resource is loaded
   function ( collada ) {
     bg = collada.scene;
