@@ -4,6 +4,12 @@ var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
 var clock = new THREE.Clock();
 var stats = new Stats();
 
+//particles
+var particlesGeo;
+var particleTexture;
+var particleMaterial;
+var particles;
+
 stats.setMode(0); // 0: fps, 1: ms
 
 // align top-left
@@ -16,7 +22,7 @@ function setupGUI() {
 
   gui.add(camera.position, 'x', -1000, 1000).step(10);
   gui.add(camera.position, 'y', -1000, 1000).step(10);
-  gui.add(camera.position, 'z', -1000, 1000).step(10);
+  gui.add(camera.position, 'z', -1000, 3000).step(10);
 }
 
 document.body.appendChild(stats.domElement);
@@ -155,6 +161,25 @@ plane.castShadow = false;
     }
   });
 
+  //particles
+  particlesGeo = new THREE.Geometry;
+
+  for (var i = 0; i < 1000; i++) {
+      var vertex = new THREE.Vector3();
+      vertex.x = Math.random()*500 - 500;
+      vertex.y = Math.random()*500 - 500;
+      vertex.z = Math.random()*500 - 500;
+      particlesGeo.vertices.push(vertex);
+  }
+  particleTexture = THREE.ImageUtils.loadTexture('assets/img/sprite1.png');
+  particleMaterial = new THREE.PointCloudMaterial({ map: particleTexture, transparent: true, size: 5 });
+  particles = new THREE.PointCloud(particlesGeo, particleMaterial);
+
+  particles.rotation.x = Math.random() * 6;
+	particles.rotation.y = Math.random() * 6;
+	particles.rotation.z = Math.random() * 6;
+
+  scene.add(particles);
 }
 
 function animate() {
@@ -165,6 +190,19 @@ function animate() {
 }
 
 function render() {
+  var time = Date.now() * 0.00005;
+  for ( i = 0; i < scene.children.length; i ++ ) {
+
+    var object = scene.children[ i ];
+
+    if ( object instanceof THREE.PointCloud ) {
+
+      object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
+
+    }
+
+  }
+
   for (var i = 0, il = fishes.length; i < il; i++) {
     boid = boids[ i ];
     boid.flock( boids );
