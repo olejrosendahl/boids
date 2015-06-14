@@ -30,7 +30,7 @@ document.body.appendChild(stats.domElement);
 function init() {
   renderer = new THREE.WebGLRenderer({antialias:true} );
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog( 0x331188,700,3000 );
+//  scene.fog = new THREE.Fog( 0x331188,700,3000 );
 
   renderer.setClearColor(0x331188, 1);
   renderer.shadowMapEnabled = true;
@@ -94,29 +94,41 @@ function init() {
   axisHelper.position.x = -100;
   scene.add(axisHelper);
 
- var loader2 = new THREE.ColladaLoader();
- loader2.load(
-  // resource URL
-  'assets/bg2.dae',
-  // Function when resource is loaded
-  function ( collada ) {
-    bg = collada.scene;
-    bg.receiveShadow = true;
-    bg.castShadow = true;
-    scene.add( bg );
-    bg.scale.x -= 15;
-    bg.scale.y = 15;
-    bg.scale.z -= 15;
-    bg.rotation.x = Math.PI/2;
-    bg.rotation.z -= .4;
-    bg.position.x -= 1500;
-    bg.position.y -=50;
-  },
-  // Function called when download progresses
-  function ( xhr ) {
-    console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-  }
-);
+//  var loader2 = new THREE.ColladaLoader();
+//  loader2.load(
+//   // resource URL
+//   'assets/bg2.dae',
+//   // Function when resource is loaded
+//   function ( collada ) {
+//     bg = collada.scene;
+//     bg.receiveShadow = true;
+//     bg.castShadow = true;
+//     scene.add( bg );
+//     bg.scale.x -= 15;
+//     bg.scale.y = 15;
+//     bg.scale.z -= 15;
+//     bg.rotation.x = Math.PI/2;
+//     bg.rotation.z -= .4;
+//     bg.position.x -= 1500;
+//     bg.position.y -=50;
+//   },
+//   // Function called when download progresses
+//   function ( xhr ) {
+//     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+//   }
+// );
+
+var loader3 = new THREE.ObjectLoader();
+loader3.load("assets/bg.json", function(object) {
+  object.traverse(function(child) {
+    if (child instanceof THREE.Mesh) {
+      child.scale.set(15, 15, -15);
+      child.rotation.set(Math.PI/2,0,.4);
+      child.position.set(1500,50,0);
+      camera.lookAt(child)
+    }
+  });
+});
 
   setupGUI();
 
