@@ -4,7 +4,6 @@ var camera, scene, renderer, fish, fishes, boid, boids, bg
 var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4,
   _alignment = 100, _cohesion = 500, _separation = 100;
 
-<<<<<<< HEAD
 //particles
 var particlesGeo;
 var particleTexture;
@@ -13,10 +12,6 @@ var particles;
 
 stats.setMode(0); // 0: fps, 1: ms
 
-// align top-left
-=======
-stats.setMode(1);
->>>>>>> master
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
@@ -25,11 +20,6 @@ document.body.appendChild(stats.domElement);
 function setupGUI() {
   var gui = new dat.GUI();
 
-<<<<<<< HEAD
-  gui.add(camera.position, 'x', -1000, 1000).step(10);
-  gui.add(camera.position, 'y', -1000, 1000).step(10);
-  gui.add(camera.position, 'z', -1000, 3000).step(10);
-=======
   gui.add(camera.position, 'x', -500, 500).step(10);
   gui.add(camera.position, 'y', -500, 500).step(10);
   gui.add(camera.position, 'z', -500, 3000).step(10);
@@ -37,13 +27,13 @@ function setupGUI() {
   gui.add(this, '_alignment', 10, 300).step(10);
   gui.add(this, '_cohesion', 100, 1000).step(10);
   gui.add(this, '_separation', 100, 300).step(10);
->>>>>>> master
+
 }
 
 function init() {
   renderer = new THREE.WebGLRenderer({antialias:true} );
   scene = new THREE.Scene();
-//  scene.fog = new THREE.Fog( 0x331188,700,3000 );
+  scene.fog = new THREE.Fog( 0x331188,700,3000 );
 
   renderer.setClearColor(0x331188, 1);
   renderer.shadowMapEnabled = true;
@@ -60,23 +50,11 @@ function init() {
   var ambientLight = new THREE.AmbientLight( 0x113344 );
   scene.add( ambientLight );
 
-  var light = new THREE.PointLight( 0xcc44ff, 1, 1000 );
-<<<<<<< HEAD
-  light.position.set( 50, 200, -50 );
-  scene.add( light );
-
   var light2 = new THREE.SpotLight( 0xcc4499, 1, 1000 );
   light2.position.set( -150, 400, 50 );
   light2.castShadow = true;
   light2.shadowDarkness = 0.5;
   light2.shadowCameraVisible = true;
-=======
-  light.position.set( 50, 100, -50 );
-  scene.add( light );
-
-  var light2 = new THREE.PointLight( 0xcc4499, 1, 1000 );
-  light2.position.set( -500, 500, 50 );
->>>>>>> master
   scene.add( light2 );
 
   fishes = [];
@@ -92,7 +70,6 @@ function init() {
     boid.velocity.y = Math.random() * 2 - 1;
     boid.velocity.z = Math.random() * 2 - 1;
   }
-
 
   var loader = new THREE.ObjectLoader();
   loader.load("assets/fish_c.json", function(object) {
@@ -111,46 +88,7 @@ function init() {
   });
 
   var axisHelper = new THREE.AxisHelper(100);
-  axisHelper.position.y = 100;
-  axisHelper.position.x = -100;
   scene.add(axisHelper);
-
-<<<<<<< HEAD
-//  var loader2 = new THREE.ColladaLoader();
-//  loader2.load(
-//   // resource URL
-//   'assets/bg2.dae',
-//   // Function when resource is loaded
-//   function ( collada ) {
-//     bg = collada.scene;
-//     bg.receiveShadow = true;
-//     bg.castShadow = true;
-//     scene.add( bg );
-//     bg.scale.x -= 15;
-//     bg.scale.y = 15;
-//     bg.scale.z -= 15;
-//     bg.rotation.x = Math.PI/2;
-//     bg.rotation.z -= .4;
-//     bg.position.x -= 1500;
-//     bg.position.y -=50;
-//   },
-//   // Function called when download progresses
-//   function ( xhr ) {
-//     console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-//   }
-// );
-
-var loader3 = new THREE.ObjectLoader();
-loader3.load("assets/bg.json", function(object) {
-  object.traverse(function(child) {
-    if (child instanceof THREE.Mesh) {
-      child.scale.set(15, 15, -15);
-      child.rotation.set(Math.PI/2,0,.4);
-      child.position.set(1500,50,0);
-      camera.lookAt(child)
-    }
-  });
-});
 
   var loader2 = new THREE.ColladaLoader();
   loader2.load('assets/bg2.dae', function(collada) {
