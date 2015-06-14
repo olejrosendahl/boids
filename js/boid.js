@@ -1,6 +1,6 @@
 var Boid = function() {
-  var _acceleration, _width = 2000, _height = 500, _depth = 4000, _maxSpeed = 5,
-  _alignment = 100, _cohesion = 500, _separation = 100;
+  var _acceleration, _width = 2000, _height = 500, _depth = 4000, maxSpeed = 5,
+  _alignment = 120, _cohesion = 500, _separation = 150;
 
   this.position = new THREE.Vector3();
   this.velocity = new THREE.Vector3();
