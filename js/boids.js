@@ -94,16 +94,13 @@ function init() {
   axisHelper.position.x = -100;
   scene.add(axisHelper);
 
- var loader2 = new THREE.ColladaLoader();
- loader2.load(
-  // resource URL
-  'assets/bg2.dae',
-  // Function when resource is loaded
-  function ( collada ) {
+  var loader2 = new THREE.ColladaLoader();
+  loader2.load('assets/bg2.dae', function(collada) {
+    collada.scene.traverse(function(child) {
+      child.receiveShadow = true;
+      child.castShadow = true;
+    });
     bg = collada.scene;
-    bg.receiveShadow = true;
-    bg.castShadow = true;
-    scene.add( bg );
     bg.scale.x -= 15;
     bg.scale.y = 15;
     bg.scale.z -= 15;
@@ -111,12 +108,8 @@ function init() {
     bg.rotation.z -= .4;
     bg.position.x -= 1500;
     bg.position.y -=50;
-  },
-  // Function called when download progresses
-  function ( xhr ) {
-    console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-  }
-);
+    scene.add( bg );
+  });
 
   setupGUI();
 
