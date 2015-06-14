@@ -94,6 +94,7 @@ function init() {
   axisHelper.position.x = -100;
   scene.add(axisHelper);
 
+<<<<<<< HEAD
 //  var loader2 = new THREE.ColladaLoader();
 //  loader2.load(
 //   // resource URL
@@ -129,6 +130,24 @@ loader3.load("assets/bg.json", function(object) {
     }
   });
 });
+
+  var loader2 = new THREE.ColladaLoader();
+  loader2.load('assets/bg2.dae', function(collada) {
+    collada.scene.traverse(function(child) {
+      child.receiveShadow = true;
+      child.castShadow = true;
+    });
+    bg = collada.scene;
+    bg.scale.x -= 15;
+    bg.scale.y = 15;
+    bg.scale.z -= 15;
+    bg.rotation.x = Math.PI/2;
+    bg.rotation.z -= .4;
+    bg.position.x -= 1500;
+    bg.position.y -=50;
+    scene.add( bg );
+  });
+
 
   setupGUI();
 
