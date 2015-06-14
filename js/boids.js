@@ -45,15 +45,10 @@ function init() {
   camera.position.y = 200;
 
   var ambientLight = new THREE.AmbientLight( 0x113344 );
-  ambientLight.shadowCameraVisible = true;
-  ambientLight.castShadow = true;
-  ambientLight.shadowDarkness = 0.5;
   scene.add( ambientLight );
 
   var light = new THREE.PointLight( 0xcc44ff, 1, 1000 );
   light.position.set( 50, 200, -50 );
-  light.castShadow = true;
-  light.shadowDarkness = 0.5;
   scene.add( light );
 
   var light2 = new THREE.SpotLight( 0xcc4499, 1, 1000 );
@@ -93,21 +88,6 @@ function init() {
       }
     });
   });
-
-var geometry = new THREE.BoxGeometry( 50, 50, 50 );
-var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
-var cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-cube.castShadow= true;
-cube.receiveShadow = true;
-
-var planeGeo = new THREE.PlaneGeometry(300,300,300);
-var planeMat = new THREE.MeshLambertMaterial({color: 0xffffff});
-var plane = new THREE.Mesh(planeGeo,planeMat);
-scene.add(plane);
-plane.rotation.x= -Math.PI/2;
-plane.receiveShadow = true;
-plane.castShadow = false;
 
   var axisHelper = new THREE.AxisHelper(100);
   axisHelper.position.y = 100;
