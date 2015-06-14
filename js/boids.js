@@ -1,9 +1,10 @@
-var camera, scene, renderer, fish, fishes, boid, boids,FishMesh,bg;
+var camera, scene, renderer, fish, fishes, boid, boids, bg
+  clock = new THREE.Clock(), stats = new Stats();
 
-var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4;
-var clock = new THREE.Clock();
-var stats = new Stats();
+var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4,
+  _alignment = 100, _cohesion = 500, _separation = 100;
 
+<<<<<<< HEAD
 //particles
 var particlesGeo;
 var particleTexture;
@@ -13,19 +14,31 @@ var particles;
 stats.setMode(0); // 0: fps, 1: ms
 
 // align top-left
+=======
+stats.setMode(1);
+>>>>>>> master
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
+document.body.appendChild(stats.domElement);
 
 function setupGUI() {
   var gui = new dat.GUI();
 
+<<<<<<< HEAD
   gui.add(camera.position, 'x', -1000, 1000).step(10);
   gui.add(camera.position, 'y', -1000, 1000).step(10);
   gui.add(camera.position, 'z', -1000, 3000).step(10);
+=======
+  gui.add(camera.position, 'x', -500, 500).step(10);
+  gui.add(camera.position, 'y', -500, 500).step(10);
+  gui.add(camera.position, 'z', -500, 3000).step(10);
+  gui.add(this, '_maxSpeed', 1, 25).step(1);
+  gui.add(this, '_alignment', 10, 300).step(10);
+  gui.add(this, '_cohesion', 100, 1000).step(10);
+  gui.add(this, '_separation', 100, 300).step(10);
+>>>>>>> master
 }
-
-document.body.appendChild(stats.domElement);
 
 function init() {
   renderer = new THREE.WebGLRenderer({antialias:true} );
@@ -41,13 +54,14 @@ function init() {
 
   camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000000 );
 
-  camera.position.z = 450;
+  camera.position.z = 1500;
   camera.position.y = 200;
 
   var ambientLight = new THREE.AmbientLight( 0x113344 );
   scene.add( ambientLight );
 
   var light = new THREE.PointLight( 0xcc44ff, 1, 1000 );
+<<<<<<< HEAD
   light.position.set( 50, 200, -50 );
   scene.add( light );
 
@@ -56,6 +70,13 @@ function init() {
   light2.castShadow = true;
   light2.shadowDarkness = 0.5;
   light2.shadowCameraVisible = true;
+=======
+  light.position.set( 50, 100, -50 );
+  scene.add( light );
+
+  var light2 = new THREE.PointLight( 0xcc4499, 1, 1000 );
+  light2.position.set( -500, 500, 50 );
+>>>>>>> master
   scene.add( light2 );
 
   fishes = [];
@@ -65,8 +86,8 @@ function init() {
     boid = boids[i] = new Boid();
 
     boid.position.x = Math.random() * 400 - 200;
-    boid.position.y = Math.random() * 800 - 100;
-    boid.position.z = Math.random() * 200 - 400;
+    boid.position.y = Math.random() * 400 - 200;
+    boid.position.z = Math.random() * 400 - 200;
     boid.velocity.x = Math.random() * 2 - 1;
     boid.velocity.y = Math.random() * 2 - 1;
     boid.velocity.z = Math.random() * 2 - 1;
@@ -167,7 +188,7 @@ loader3.load("assets/bg.json", function(object) {
 
     for (var i = 0; i < boids.length; i++) {
       boid = boids[i];
-      target.z = 0;
+      target.z = boid.position.z;
       boid.follow(target);
     }
   });
@@ -217,6 +238,11 @@ function render() {
   for (var i = 0, il = fishes.length; i < il; i++) {
     boid = boids[ i ];
     boid.flock( boids );
+
+    if (boid._maxSpeed != _maxSpeed) boid._maxSpeed = _maxSpeed;
+    if (boid._alignment != _alignment) boid._alignment = _alignment;
+    if (boid._cohesion != _cohesion) boid._cohesion = _cohesion;
+    if (boid._separation != _separation) boid._separation = _separation;
 
     fish = fishes[ i ];
     fish.position.copy( boids[ i ].position );
