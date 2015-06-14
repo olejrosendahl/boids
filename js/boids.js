@@ -50,12 +50,16 @@ function init() {
   var ambientLight = new THREE.AmbientLight( 0x113344 );
   scene.add( ambientLight );
 
-  var light2 = new THREE.SpotLight( 0xcc4499, 1, 1000 );
-  light2.position.set( -150, 400, 50 );
-  light2.castShadow = true;
-  light2.shadowDarkness = 0.5;
-  light2.shadowCameraVisible = true;
-  scene.add( light2 );
+  var shadowLight = new THREE.SpotLight( 0xffffff, 1, 0,Math.PI/2,1 );
+  shadowLight.position.set( 0, 1500, 50 );
+  shadowLight.castShadow = true;
+  shadowLight.shadowDarkness = 0.5;
+  shadowLight.shadowCameraVisible = true;
+  shadowLight.shadowBias = 0.0001;
+  shadowLight.shadowDarkness = 0.5;
+  shadowLight.shadowMapWidth = 1024;
+  shadowLight.shadowMapHeight = 512;
+  scene.add( shadowLight );
 
   fishes = [];
   boids = [];
@@ -94,7 +98,7 @@ function init() {
   loader2.load('assets/bg2.dae', function(collada) {
     collada.scene.traverse(function(child) {
       child.receiveShadow = true;
-      child.castShadow = true;
+      //child.castShadow = true;
     });
     bg = collada.scene;
     bg.scale.x -= 15;
