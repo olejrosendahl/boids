@@ -1,7 +1,13 @@
 var Boid = function() {
-  var _acceleration, _width = 2000, _height = 500, _depth = 4000, maxSpeed = 5,
-  _alignment = 120, _cohesion = 500, _separation = 150;
+  var _acceleration;
 
+  this.maxSpeed = 5;
+  this.maxAlignment = 120;
+  this.maxCohesion = 500;
+  this.maxSeparation = 100;
+  this.width = 2000;
+  this.height = 500;
+  this.depth = 4000;
   this.position = new THREE.Vector3();
   this.velocity = new THREE.Vector3();
   _acceleration = new THREE.Vector3();
@@ -28,32 +34,32 @@ var Boid = function() {
   this.checkBorder = function () {
     vector = new THREE.Vector3();
 
-    vector.set(-_width, this.position.y, this.position.z);
+    vector.set(-this.width, this.position.y, this.position.z);
     vector = this.avoid(vector);
     vector.multiplyScalar(5);
     _acceleration.add(vector);
 
-    vector.set(_width, this.position.y, this.position.z);
+    vector.set(this.width, this.position.y, this.position.z);
     vector = this.avoid(vector);
     vector.multiplyScalar(5);
     _acceleration.add(vector);
 
-    vector.set(this.position.x, -_height, this.position.z);
+    vector.set(this.position.x, -this.height, this.position.z);
     vector = this.avoid(vector);
     vector.multiplyScalar(5);
     _acceleration.add(vector);
 
-    vector.set(this.position.x, _height, this.position.z);
+    vector.set(this.position.x, this.height, this.position.z);
     vector = this.avoid(vector);
     vector.multiplyScalar(5);
     _acceleration.add(vector);
 
-    vector.set(this.position.x, this.position.y, -_depth);
+    vector.set(this.position.x, this.position.y, -this.depth);
     vector = this.avoid(vector);
     vector.multiplyScalar(5);
     _acceleration.add(vector);
 
-    vector.set(this.position.x, this.position.y, _depth);
+    vector.set(this.position.x, this.position.y, this.depth);
     vector = this.avoid(vector);
     vector.multiplyScalar(5);
 
@@ -92,7 +98,7 @@ var Boid = function() {
 
     sumVelocity.divideScalar(boids.length - 1);
     steer.subVectors(sumVelocity, this.velocity);
-    steer.divideScalar(_alignment);
+    steer.divideScalar(this.maxAlignment);
 
     return steer;
   }
@@ -108,7 +114,7 @@ var Boid = function() {
 
     sumPositions.divideScalar(boids.length - 1);
     steer.subVectors(sumPositions, this.position);
-    steer.divideScalar(_cohesion);
+    steer.divideScalar(this.maxCohesion);
 
     return steer;
   }
@@ -120,7 +126,7 @@ var Boid = function() {
       boid = boids[i];
       distance = boid.position.distanceTo(this.position);
 
-      if(boid != this && distance < _separation){
+      if(boid != this && distance < this.maxSeparation){
         steer.subVectors(this.position, boid.position);
         steer.normalize();
         steer.divideScalar(distance / 10);

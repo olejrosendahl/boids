@@ -1,8 +1,11 @@
 var camera, scene, renderer, fish, fishes, boid, boids, bg
   clock = new THREE.Clock(), stats = new Stats();
 
-var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 4,
-  _alignment = 100, _cohesion = 500, _separation = 100;
+var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 5,
+  _alignment = 100, _cohesion = 500, _separation = 100, _width = 2000,
+  _height = 500, _depth = 1000;
+
+var NUMBER_OF_BOIDS = 100;
 
 //particles
 var particlesGeo;
@@ -24,10 +27,12 @@ function setupGUI() {
   gui.add(camera.position, 'y', -500, 500).step(10);
   gui.add(camera.position, 'z', -500, 3000).step(10);
   gui.add(this, '_maxSpeed', 1, 25).step(1);
-  gui.add(this, '_alignment', 10, 300).step(10);
-  gui.add(this, '_cohesion', 100, 1000).step(10);
-  gui.add(this, '_separation', 100, 300).step(10);
-
+  gui.add(this, '_alignment', 10, 500).step(10);
+  gui.add(this, '_cohesion', 10, 500).step(10);
+  gui.add(this, '_separation', 10, 500).step(10);
+  gui.add(this, '_width', 100, 2500).step(100);
+  gui.add(this, '_height', 100, 2500).step(100);
+  gui.add(this, '_depth', 100, 2500).step(100);
 }
 
 function init() {
@@ -64,7 +69,7 @@ function init() {
   fishes = [];
   boids = [];
 
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < NUMBER_OF_BOIDS; i++) {
     boid = boids[i] = new Boid();
 
     boid.position.x = Math.random() * 400 - 200;
@@ -81,7 +86,7 @@ function init() {
       if (child instanceof THREE.Mesh) {
         child.scale.set(10, 10, 10);
 
-        for (var i = 0; i < 50; i++) {
+        for (var i = 0; i < NUMBER_OF_BOIDS; i++) {
           fish = fishes[i] = child.clone();
           fish.receiveShadow = true;
           fish.castShadow = true;
@@ -181,10 +186,13 @@ function render() {
     boid = boids[ i ];
     boid.flock( boids );
 
-    if (boid._maxSpeed != _maxSpeed) boid._maxSpeed = _maxSpeed;
-    if (boid._alignment != _alignment) boid._alignment = _alignment;
-    if (boid._cohesion != _cohesion) boid._cohesion = _cohesion;
-    if (boid._separation != _separation) boid._separation = _separation;
+    if (boid.maxSpeed != _maxSpeed) boid.maxSpeed = _maxSpeed;
+    if (boid.maxAlignment != _alignment) boid.maxAlignment = _alignment;
+    if (boid.maxCohesion != _cohesion) boid.maxCohesion = _cohesion;
+    if (boid.maxSeparation != _separation) boid.maxSeparation = _separation;
+    if (boid.height != _height) boid.height = _height;
+    if (boid.width != _width) boid.width = _width;
+    if (boid.depth != _depth) boid.depth = _depth;
 
     fish = fishes[ i ];
     fish.position.copy( boids[ i ].position );
