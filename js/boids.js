@@ -5,13 +5,9 @@ var _neighborhoodRadius = 100, _maxSteerForce = 0.1, _maxSpeed = 5,
   _alignment = 100, _cohesion = 500, _separation = 100, _width = 2000,
   _height = 500, _depth = 1000;
 
-var NUMBER_OF_BOIDS = 100;
+var zoomBlurPass, dirtPass, multiPassBloomPass, dofPass, composer;
 
-//particles
-var particlesGeo;
-var particleTexture;
-var particleMaterial;
-var particles;
+var NUMBER_OF_BOIDS = 50;
 
 stats.setMode(0); // 0: fps, 1: ms
 
@@ -59,7 +55,7 @@ function init() {
   shadowLight.position.set( 0, 1500, 50 );
   shadowLight.castShadow = true;
   shadowLight.shadowDarkness = 0.5;
-  shadowLight.shadowCameraVisible = true;
+  //shadowLight.shadowCameraVisible = true;
   shadowLight.shadowBias = 0.0001;
   shadowLight.shadowDarkness = 0.5;
   shadowLight.shadowMapWidth = 1024;
@@ -96,9 +92,6 @@ function init() {
     });
   });
 
-  var axisHelper = new THREE.AxisHelper(100);
-  scene.add(axisHelper);
-
   var loader2 = new THREE.ColladaLoader();
   loader2.load('assets/bg2.dae', function(collada) {
     collada.scene.traverse(function(child) {
@@ -116,8 +109,16 @@ function init() {
     scene.add( bg );
   });
 
-
   setupGUI();
+
+  composer = new WAGNER.Composer(renderer);
+  composer.setSize(window.innerWidth, window.innerHeight);
+  renderer.autoClearColor = true;
+
+  zoomBlurPass = new WAGNER.ZoomBlurPass();
+  multiPassBloomPass = new WAGNER.MultiPassBloomPass();
+  dirtPass = new WAGNER.DirtPass();
+  dofPass = new WAGNER.GuidedFullBoxBlurPass();
 
   window.addEventListener('resize', function(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -139,26 +140,6 @@ function init() {
       boid.follow(target);
     }
   });
-
-  //particles
-  particlesGeo = new THREE.Geometry;
-
-  for (var i = 0; i < 1000; i++) {
-      var vertex = new THREE.Vector3();
-      vertex.x = Math.random()*500 - 500;
-      vertex.y = Math.random()*500 - 500;
-      vertex.z = Math.random()*500 - 500;
-      particlesGeo.vertices.push(vertex);
-  }
-  particleTexture = THREE.ImageUtils.loadTexture('assets/img/sprite1.png');
-  particleMaterial = new THREE.PointCloudMaterial({ map: particleTexture, transparent: true, size: 5 });
-  particles = new THREE.PointCloud(particlesGeo, particleMaterial);
-
-  particles.rotation.x = Math.random() * 6;
-	particles.rotation.y = Math.random() * 6;
-	particles.rotation.z = Math.random() * 6;
-
-  scene.add(particles);
 }
 
 function animate() {
@@ -171,15 +152,11 @@ function animate() {
 function render() {
   var time = Date.now() * 0.00005;
   for ( i = 0; i < scene.children.length; i ++ ) {
-
     var object = scene.children[ i ];
 
     if ( object instanceof THREE.PointCloud ) {
-
       object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
-
     }
-
   }
 
   for (var i = 0, il = fishes.length; i < il; i++) {
@@ -203,9 +180,15 @@ function render() {
    // fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
   }
 
-  THREE.AnimationHandler.update( clock.getDelta() );
 
-  renderer.render(scene, camera);
+  composer.reset();
+  composer.render( scene, camera );
+  composer.pass( dofPass );
+  //composer.pass( multiPassBloomPass );
+  //composer.pass( zoomBlurPass );
+  composer.toScreen();
+
+  //THREE.AnimationHandler.update( clock.getDelta() );
 }
 
 init();
