@@ -29,6 +29,9 @@ function setupGUI() {
   gui.add(this, '_width', 100, 2500).step(100);
   gui.add(this, '_height', 100, 2500).step(100);
   gui.add(this, '_depth', 100, 2500).step(100);
+  gui.add( vignettePass.params, 'amount' ).min(0).max(10);
+	gui.add( vignettePass.params, 'falloff' ).min(0).max(10);
+
 }
 
 function init() {
@@ -109,16 +112,16 @@ function init() {
     scene.add( bg );
   });
 
-  setupGUI();
+
 
   composer = new WAGNER.Composer(renderer);
   composer.setSize(window.innerWidth, window.innerHeight);
   renderer.autoClearColor = true;
 
-  zoomBlurPass = new WAGNER.ZoomBlurPass();
   multiPassBloomPass = new WAGNER.MultiPassBloomPass();
   dirtPass = new WAGNER.DirtPass();
   dofPass = new WAGNER.GuidedFullBoxBlurPass();
+  vignettePass = new WAGNER.VignettePass();
 
   window.addEventListener('resize', function(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -140,6 +143,7 @@ function init() {
       boid.follow(target);
     }
   });
+  setupGUI();
 }
 
 function animate() {
@@ -184,8 +188,8 @@ function render() {
   composer.reset();
   composer.render( scene, camera );
   composer.pass( dofPass );
-  //composer.pass( multiPassBloomPass );
-  //composer.pass( zoomBlurPass );
+//  composer.pass( multiPassBloomPass );
+  composer.pass( vignettePass );
   composer.toScreen();
 
   //THREE.AnimationHandler.update( clock.getDelta() );
