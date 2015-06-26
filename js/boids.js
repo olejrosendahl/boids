@@ -174,10 +174,10 @@ function render() {
     fish = fishes[ i ];
     fish.position.copy( boids[ i ].position );
 
-    fish.rotation.z = Math.atan2(- boid.velocity.z, boid.velocity.x);
+    fish.rotation.z = Math.atan2(- boid.velocity.z, boid.velocity.x) + -90 * Math.PI/180;
     fish.rotation.y = Math.asin(boid.velocity.y / boid.velocity.length()) * 0.2;
 
-   // fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
+    //fish.phase = ( fish.phase + ( Math.max( 0, fish.rotation.z ) + 0.1 )  ) % 62.83;
   }
 
 

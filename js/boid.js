@@ -8,6 +8,7 @@ var Boid = function() {
   this.width = 2000;
   this.height = 500;
   this.depth = 4000;
+  this.maxSpeed = 5;
   this.position = new THREE.Vector3();
   this.velocity = new THREE.Vector3();
   _acceleration = new THREE.Vector3();
@@ -24,8 +25,8 @@ var Boid = function() {
     this.velocity.add(_acceleration);
     var l = this.velocity.length();
 
-    if (l > _maxSpeed)
-      this.velocity.divideScalar(l / _maxSpeed);
+    if (l > this.maxSpeed)
+      this.velocity.divideScalar(l / this.maxSpeed);
 
     this.position.add(this.velocity);
     _acceleration.set(0, 0, 0);
